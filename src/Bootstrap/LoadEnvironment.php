@@ -16,5 +16,8 @@ final class LoadEnvironment
         if (is_file($envPath)) {
             Env::load($envPath);
         }
+
+        $env = Env::get('APP_ENV', 'production');
+        $app->instance('env', $env);
     }
 }

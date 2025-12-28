@@ -16,9 +16,16 @@ final class LoadConfiguration
         $items = [];
 
         if (is_dir($configPath)) {
-            foreach (glob($configPath . '/*.php') as $file) {
-                $key = basename($file, '.php');
-                $items[$key] = require $file;
+            $iterator = new \DirectoryIterator($configPath);
+            foreach ($iterator as $fileinfo) {
+                if (!$fileinfo->isDot() && $fileinfo->getExtension() === 'php') {
+                    $key = $fileinfo->getBasename('.php');
+                    $value = require $fileinfo->getPathname();
+
+                    if (is_array($value)) {
+                        $items[$key] = $value;
+                    }
+                }
             }
         }
 
